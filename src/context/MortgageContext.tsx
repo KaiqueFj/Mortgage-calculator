@@ -1,35 +1,51 @@
-/* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState } from "react";
 
-// Define the context type
-interface MortgageContextType {
+type MortgageContextType = {
   mortgage: string;
-  setMortgage: React.Dispatch<React.SetStateAction<string>>;
+  setMortgage: (value: string) => void;
   mortgageTerm: string;
-  setMortgageTerm: React.Dispatch<React.SetStateAction<string>>;
+  setMortgageTerm: (value: string) => void;
   mortgageInterestRate: string;
-  setMortgageInterestRate: React.Dispatch<React.SetStateAction<string>>;
+  setMortgageInterestRate: (value: string) => void;
   monthlyRepayment: number;
-  setMonthlyRepayment: React.Dispatch<React.SetStateAction<number>>;
-  totalRepayment: string;
-  setTotalRepayment: React.Dispatch<React.SetStateAction<string>>;
-}
+  setMonthlyRepayment: (value: number) => void;
+  totalRepayment: number;
+  setTotalRepayment: (value: number) => void;
+  resetValues: () => void;
+};
 
-// Create context with a default value (undefined)
+const initialState = {
+  mortgage: "",
+  mortgageTerm: "",
+  mortgageInterestRate: "",
+  monthlyRepayment: 0,
+  totalRepayment: 0,
+};
+
 const MortgageContext = createContext<MortgageContextType | undefined>(
   undefined
 );
 
-interface MortgageProviderProps {
-  children: ReactNode; // Ensure children is typed correctly
-}
+export function MortgageProvider({ children }: { children: React.ReactNode }) {
+  const [mortgage, setMortgage] = useState(initialState.mortgage);
+  const [mortgageTerm, setMortgageTerm] = useState(initialState.mortgageTerm);
+  const [mortgageInterestRate, setMortgageInterestRate] = useState(
+    initialState.mortgageInterestRate
+  );
+  const [monthlyRepayment, setMonthlyRepayment] = useState(
+    initialState.monthlyRepayment
+  );
+  const [totalRepayment, setTotalRepayment] = useState(
+    initialState.totalRepayment
+  );
 
-export const MortgageProvider = ({ children }: MortgageProviderProps) => {
-  const [mortgage, setMortgage] = useState<string>("0");
-  const [mortgageTerm, setMortgageTerm] = useState<string>("");
-  const [mortgageInterestRate, setMortgageInterestRate] = useState<string>("");
-  const [monthlyRepayment, setMonthlyRepayment] = useState<number>(0);
-  const [totalRepayment, setTotalRepayment] = useState<string>("");
+  const resetValues = () => {
+    setMortgage(initialState.mortgage);
+    setMortgageTerm(initialState.mortgageTerm);
+    setMortgageInterestRate(initialState.mortgageInterestRate);
+    setMonthlyRepayment(initialState.monthlyRepayment);
+    setTotalRepayment(initialState.totalRepayment);
+  };
 
   return (
     <MortgageContext.Provider
@@ -44,15 +60,15 @@ export const MortgageProvider = ({ children }: MortgageProviderProps) => {
         setMonthlyRepayment,
         totalRepayment,
         setTotalRepayment,
+        resetValues, // Provide the reset function
       }}
     >
       {children}
     </MortgageContext.Provider>
   );
-};
+}
 
-// Custom hook to access the MortgageContext
-export const useMortgageContext = (): MortgageContextType => {
+export function useMortgageContext() {
   const context = useContext(MortgageContext);
   if (!context) {
     throw new Error(
@@ -60,4 +76,4 @@ export const useMortgageContext = (): MortgageContextType => {
     );
   }
   return context;
-};
+}
