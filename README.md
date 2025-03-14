@@ -58,6 +58,7 @@ This is a simple Mortgage Calculator built using React and TypeScript. It allows
 ├── src
 │ ├── components
 │ │ ├── MortgageCalculator.tsx # Main component
+│ │ ├── Results.tsx # Results component
 │ ├── context
 │ │ ├── MortgageContext.tsx # Context provider
 │ ├── styles
